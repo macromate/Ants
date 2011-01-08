@@ -1,0 +1,20 @@
+Overview of the directories
+===============================
+  - assets: Holds the image files and the python scripts. Needs to be
+            in the same folder as the executeable, so it is copied during
+            the building process.
+  - build: Should be empty, this is the predefined folder for building Ants.
+  - cmake: Includes custom CMake scripts
+  - src: The source files
+  - test: The unit test files
+  
+How to build
+==============
+Execute:
+  $ cd Ants/build
+  $ cmake ../src
+  $ make
+
+=> Finished!
+Start the game using
+  $ ./ants
