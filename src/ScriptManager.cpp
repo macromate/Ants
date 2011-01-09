@@ -19,7 +19,8 @@ BOOST_PYTHON_MODULE(Ants) {
     
   class_<GameObject>("GameObject", no_init)
     .def("get_radius", &GameObject::getRadius)
-    .def("set_radius", &GameObject::setRadius);
+    .def("set_radius", &GameObject::setRadius)
+    .def("get_id", &GameObject::getId);
     
   // class_<Ant>("Ant", no_init)
   //   .def("get_radius", &Ant::getRadius)

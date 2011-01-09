@@ -10,6 +10,8 @@
 #include <iostream>
 #include <algorithm>
 
+int GameObject::sHighestId = 1;
+
 using std::find;
 
 GameObject::GameObject() :
@@ -17,8 +19,10 @@ mCost(0.0),
 mNode(),
 mRadius(1),
 mObjectsInRadius(),
-mSprite(0) {
+mSprite(0),
+mId(sHighestId) {
 //	std::cout << "constructor gameobject" << std::endl;
+  sHighestId++;
 }
 
 GameObject::~GameObject() {

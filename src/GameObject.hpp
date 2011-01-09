@@ -15,6 +15,8 @@ public:
 	GameObject(const GameObject&);
 	virtual ~GameObject();
 	
+  inline int getId() const { return mId; }
+	
 	void setCost(float cost) { mCost = cost; }
 	inline float getCost() const { return mCost; }
 	
@@ -38,6 +40,8 @@ protected:
 	int mRadius;
 	GameObjects mObjectsInRadius;
 	sf::Sprite* mSprite;
+  int mId;
+  static int sHighestId;
 };
 
 #endif
