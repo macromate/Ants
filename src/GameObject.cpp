@@ -3,6 +3,9 @@
 #include "NodeManager.hpp"
 #include "ScriptManager.hpp"
 #include "Pathfinder.hpp"
+#include "EventManager.hpp"
+
+#include "events/GameObjectArrivesInRadius.hpp"
 
 #include <iostream>
 #include <algorithm>
@@ -38,20 +41,9 @@ void GameObject::setNode(Node* node) {
 		mNode->addGameObject(this);
 }
 
-void GameObject::receiveEvent(Event event) {
-	if (event.getEventType() == ETYPE_LEAVES_RADIUS) { 
-//		GameObject* obj1 = event.getTargets()[0];
-		GameObject* obj2 = event.getTargets()[1];
-		//if (this == obj2) {
-			ScriptManager::getInstance()->startScript("ant_leaves_from_radius");
-			// find path to new position
-//			Pathfinder finder(this->getNode(), obj2->getNode());
-//			Path path = finder.search();
-//			Path::iterator i = path.begin();
-//			for (; i < path.end(); i++) {
-//				std::cout << (*i).x << "/" << (*i).y << std::endl;
-//		//	}
-	//	}
+void GameObject::receiveEvent(Event& event) {
+	if (event.getEventType() == ETYPE_LEAVES_RADIUS) {
+	  ScriptManager::getInstance()->startScript("ant_leaves_from_radius");
 	} else {
 		std::cout << "GameObject received unspecified event" << std::endl;
 	}
@@ -73,7 +65,7 @@ void GameObject::trigger() {
 			for (; n < objects.end(); n++) {
 				if (find(mObjectsInRadius.begin(), mObjectsInRadius.end(), *n) == mObjectsInRadius.end()) {
 					// Objekt befindet sich zum ersten mal im Radius
-					Event event = Event(ETYPE_IN_RADIUS, *n, this);
+          GameObjectArrivesInRadius event = GameObjectArrivesInRadius(this, (*n));
 					EventManager::getInstance()->fire(event);
 					// Objekt speichern, damit beim Triggern im nächsten Frame nicht wieder das Event gesendet wird
 					mObjectsInRadius.push_back(*n);
@@ -81,25 +73,24 @@ void GameObject::trigger() {
 					// Objekt befindet sich schon länger im Radius
 					// Event wurde schon getriggert -> jetzt nicht mehr triggern
 				}
-				
 			}
 		}
-		// überprüfen ob objekte nicht mehr da sind
-		GameObjects::iterator n = mObjectsInRadius.begin();
-		for (; n < mObjectsInRadius.end(); n++) {
-			if (objects.empty() || // kein einzeiges objekt mehr in umgebung
-				find(objects.begin(), objects.end(), *n) == objects.end()) {
-				// objekt ist verschwunden
-				// event darüber senden
-				GameObjects targets;
-				targets.push_back(this);
-				targets.push_back(*n);
-				Event event = Event(ETYPE_LEAVES_RADIUS, targets, this);
-				EventManager::getInstance()->fire(event);
-				// und aus dem zwischenspeicher entfernen
-				mObjectsInRadius.erase(find(mObjectsInRadius.begin(), mObjectsInRadius.end(), *n));
-			}
-		}
+    // // überprüfen ob objekte nicht mehr da sind
+    // GameObjects::iterator n = mObjectsInRadius.begin();
+    // for (; n < mObjectsInRadius.end(); n++) {
+    //  if (objects.empty() || // kein einzeiges objekt mehr in umgebung
+    //    find(objects.begin(), objects.end(), *n) == objects.end()) {
+    //    // objekt ist verschwunden
+    //    // event darüber senden
+    //    GameObjects targets;
+    //    targets.push_back(this);
+    //    targets.push_back(*n);
+    //    Event event = Event(ETYPE_LEAVES_RADIUS, targets, this);
+    //    EventManager::getInstance()->fire(event);
+    //    // und aus dem zwischenspeicher entfernen
+    //    mObjectsInRadius.erase(find(mObjectsInRadius.begin(), mObjectsInRadius.end(), *n));
+    //  }
+    // }
 	} // if(mNode)
 }
 

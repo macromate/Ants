@@ -29,7 +29,7 @@ public:
 	
 	// checks all event triggers
 	void trigger();
-	virtual void receiveEvent(Event);
+	virtual void receiveEvent(Event&);
 	virtual bool isAccessible() const;
 	
 protected:

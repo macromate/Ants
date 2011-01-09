@@ -6,21 +6,16 @@
 
 #include <vector>
 
-class GameObject;
-class EventManager;
-
 class Event {
 public:
-	Event(EventType, const GameObject* singleTarget, const GameObject* const sender);
-	Event(EventType, std::vector<GameObject*> targets, GameObject* sender);
-	EventType getEventType() const { return mType; }
-	const GameObject* getSingleTarget() const { return mSingleTarget; };
-	GameObjects getTargets() const { return mTargets; }
-	const GameObject* getSender() const { return mSender; }
-private:
-	EventType mType;
-	const GameObject* mSingleTarget;
-	std::vector<GameObject*> mTargets;
-	const GameObject *mSender;
+  virtual GameObjects getReceivers() const = 0;
+  inline virtual EventType getEventType() const { return mEventType; }
+protected:
+  virtual inline EventType setEventType(EventType type) { mEventType = type; }
+  EventType mEventType;
 };
+
+// #include "events/GameObjectArrivesInRadius.hpp"
+
+
 #endif
