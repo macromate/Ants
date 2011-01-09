@@ -17,9 +17,13 @@ BOOST_PYTHON_MODULE(Ants) {
     .def("get_x", &Coordinate::getX)
     .def("get_y", &Coordinate::getY);
     
-  class_<Ant>("Ant", no_init)
-    .def("get_radius", &Ant::getRadius)
-    .def("set_radius", &Ant::setRadius);
+  class_<GameObject>("GameObject", no_init)
+    .def("get_radius", &GameObject::getRadius)
+    .def("set_radius", &GameObject::setRadius);
+    
+  // class_<Ant>("Ant", no_init)
+  //   .def("get_radius", &Ant::getRadius)
+  //   .def("set_radius", &Ant::setRadius);
 }
 
 ScriptManager *ScriptManager::mInstance = 0;
@@ -44,20 +48,19 @@ ScriptManager::~ScriptManager() {
 	delete mInstance;
 }
 
-void ScriptManager::startScript(string name) {
+void ScriptManager::startScript(string pName) {
   try {
-    // set up variables
-    object main_module((handle<>(borrowed(PyImport_AddModule("__main__")))));
-    object main_namespace = main_module.attr("__dict__");
-
-    // Coordinate coor = Coordinate(4, 14);
-    // main_namespace["coor"] = ptr(&coor);
-    
-    FILE* pyFile = fopen((PATH_TO_SCRIPTS + name + ".py").c_str(), "r");
-    PyRun_SimpleFile(pyFile, name.c_str());
+    FILE* pyFile = fopen((PATH_TO_SCRIPTS + pName + ".py").c_str(), "r");
+    PyRun_SimpleFile(pyFile, pName.c_str());
 
   } catch (error_already_set) {
     PyErr_Print();
   }
-  
+}
+
+// TODO: Unregister Gameobjects!!
+void ScriptManager::registerGameObject(std::string pName, GameObject* pObject) {
+  object main_module(handle<>(borrowed(PyImport_AddModule("__main__"))));
+  object main_namespace = main_module.attr("__dict__");
+  main_namespace[pName] = ptr(pObject);
 }

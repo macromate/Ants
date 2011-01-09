@@ -11,7 +11,7 @@ class EventManager {
 public:
 	static EventManager *getInstance();
 	~EventManager();
-	void fire(Event& event);
+	void fire(Event*);
 private:
 	EventManager();
 	EventManager(const EventManager&);

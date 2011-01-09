@@ -41,9 +41,20 @@ void GameObject::setNode(Node* node) {
 		mNode->addGameObject(this);
 }
 
-void GameObject::receiveEvent(Event& event) {
-	if (event.getEventType() == ETYPE_LEAVES_RADIUS) {
-	  ScriptManager::getInstance()->startScript("ant_leaves_from_radius");
+void GameObject::receiveEvent(Event* event) {
+  using namespace boost::python;
+  ScriptManager* sm = ScriptManager::getInstance();
+  if (event->getEventType() == ETYPE_IN_RADIUS) {
+    
+    GameObjectArrivesInRadius* new_event = static_cast<GameObjectArrivesInRadius*>(event);
+    GameObject* ant = new_event->getObjectInRadius();
+    sm->registerGameObject("ant", ant);
+    sm->startScript("ant_arrives_in_radius");
+    
+  } else if (event->getEventType() == ETYPE_LEAVES_RADIUS) {
+    
+	  sm->startScript("ant_leaves_from_radius");
+	  
 	} else {
 		std::cout << "GameObject received unspecified event" << std::endl;
 	}
@@ -65,7 +76,7 @@ void GameObject::trigger() {
 			for (; n < objects.end(); n++) {
 				if (find(mObjectsInRadius.begin(), mObjectsInRadius.end(), *n) == mObjectsInRadius.end()) {
 					// Objekt befindet sich zum ersten mal im Radius
-          GameObjectArrivesInRadius event = GameObjectArrivesInRadius(this, (*n));
+          GameObjectArrivesInRadius* event = new GameObjectArrivesInRadius(this, (*n));
 					EventManager::getInstance()->fire(event);
 					// Objekt speichern, damit beim Triggern im nächsten Frame nicht wieder das Event gesendet wird
 					mObjectsInRadius.push_back(*n);

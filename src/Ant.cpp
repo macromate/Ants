@@ -34,11 +34,9 @@ Ant::~Ant() {
 }
 
 /* this is were scripts are set up and started according to the events the ant receives */
-void Ant::receiveEvent(Event& event) {
+void Ant::receiveEvent(Event* event) {
 	ScriptManager *sm = ScriptManager::getInstance();
-	if(event.getEventType() == ETYPE_IN_RADIUS) {
-		sm->startScript("ant_arrives_in_radius");
-	} else if (event.getEventType() == ETYPE_ANT_STARTS_ATTACK) {
+  if (event->getEventType() == ETYPE_ANT_STARTS_ATTACK) {
     // GameObject *defender = event.getTargets()[0];
     // GameObject *attacker = event.getTargets()[1];
     // if (this == defender) {
@@ -46,7 +44,7 @@ void Ant::receiveEvent(Event& event) {
     // } else if (this == attacker) {
     //  sm->startScript("ant_is_attacking");
     // }
-	} else if (event.getEventType() == ETYPE_INVENTORY_ADD) {
+	} else if (event->getEventType() == ETYPE_INVENTORY_ADD) {
 		sm->startScript("ant_sets_inventory");
 	} else {
 		GameObject::receiveEvent(event);

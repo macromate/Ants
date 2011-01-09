@@ -18,7 +18,7 @@ public:
 	Ant(Strain, Coordinate);
 	Ant(const Ant& ant);
 	virtual ~Ant();
-	virtual void receiveEvent(Event& event);
+	virtual void receiveEvent(Event*);
 	inline bool isAccessible() const { return true; }
 	
 	inline Strain getStrain() { return mStrain; }

@@ -28,10 +28,11 @@ EventManager::~EventManager() {
 	delete mInstance;
 }
 
-void EventManager::fire(Event& event) {
-  GameObjects receivers = event.getReceivers();
+void EventManager::fire(Event* event) {
+  GameObjects receivers = event->getReceivers();
   GameObjects::iterator i = receivers.begin();
   for(; i < receivers.end(); i++) {
     (*i)->receiveEvent(event);
   }
+  delete event;
 }
