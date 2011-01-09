@@ -14,7 +14,7 @@ mStrength(1)
 	GameObject::GameObject();
 	mSprite = new Sprite();
 	mSprite->SetImage(*AssetManager::getInstance()->getImage("ant.png")); // todo: image gets probably copied here
-	mSprite->SetPosition(ConvertXCoordinate(coor.x), ConvertYCoordinate(coor.y));
+	mSprite->SetPosition(ConvertXCoordinate(coor.getX()), ConvertYCoordinate(coor.getY()));
 	setNode(NodeManager::getInstance()->getNode(coor)); // sets virtual position
 	//std::cout << "Ant constructor" << std::endl;
 	EventManager::getInstance()->addListener(this, ETYPE_IN_RADIUS);

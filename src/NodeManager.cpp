@@ -40,35 +40,34 @@ Node* NodeManager::getNode(int x, int y) {
 }
 
 Node* NodeManager::getNode(Coordinate coor) {
-	return getNode(coor.x, coor.y);
+	return getNode(coor.getX(), coor.getY());
 }
 
 Nodes NodeManager::getNeighbourNodes(Node* node) {
 	Nodes neighbours = Nodes();
-	Coordinate coor;
-	coor = MakeCoordinate(node->getX() - 1, node->getY() + 1);
+	Coordinate coor = Coordinate(node->getX() - 1, node->getY() + 1);
 	if(isIncluded(coor)) neighbours.push_back(getNode(coor));
-	coor = MakeCoordinate(node->getX(), node->getY() + 1);
+	coor = Coordinate(node->getX(), node->getY() + 1);
 	if(isIncluded(coor)) neighbours.push_back(getNode(coor));
-	coor = MakeCoordinate(node->getX() + 1, node->getY() + 1);
+	coor = Coordinate(node->getX() + 1, node->getY() + 1);
 	if(isIncluded(coor)) neighbours.push_back(getNode(coor));
-	coor = MakeCoordinate(node->getX() - 1, node->getY());
+	coor = Coordinate(node->getX() - 1, node->getY());
 	if(isIncluded(coor)) neighbours.push_back(getNode(coor));
-	coor = MakeCoordinate(node->getX() + 1, node->getY());
+	coor = Coordinate(node->getX() + 1, node->getY());
 	if(isIncluded(coor)) neighbours.push_back(getNode(coor));
-	coor = MakeCoordinate(node->getX() - 1, node->getY() - 1);
+	coor = Coordinate(node->getX() - 1, node->getY() - 1);
 	if(isIncluded(coor)) neighbours.push_back(getNode(coor));
-	coor = MakeCoordinate(node->getX(), node->getY() - 1);
+	coor = Coordinate(node->getX(), node->getY() - 1);
 	if(isIncluded(coor)) neighbours.push_back(getNode(coor));
-	coor = MakeCoordinate(node->getX() + 1, node->getY() - 1);
+	coor = Coordinate(node->getX() + 1, node->getY() - 1);
 	if(isIncluded(coor)) neighbours.push_back(getNode(coor));
 	
 	return neighbours;
 }
 
 bool NodeManager::isIncluded(Coordinate coor) {
-	return coor.x >= mLeftBorder && coor.y >= mBottomBorder &&
-		   coor.x <= mRightBorder && coor.y <= mTopBorder;
+	return coor.getX() >= mLeftBorder && coor.getY() >= mBottomBorder &&
+		   coor.getX() <= mRightBorder && coor.getY() <= mTopBorder;
 }
 
 bool NodeManager::areNodesDiagonal(Node* n1, Node* n2) {
@@ -88,14 +87,14 @@ Nodes NodeManager::getNodesInRadius(Node* node, int radius) {
 	int y = node->getY();
 	vector<Coordinate> coordinates;
 	for (int n = 1; n <= radius; n++) {
-		coordinates.push_back(MakeCoordinate(x - n, y + n));
-		coordinates.push_back(MakeCoordinate(x, y + n));
-		coordinates.push_back(MakeCoordinate(x + n, y + n));
-		coordinates.push_back(MakeCoordinate(x - n, y));
-		coordinates.push_back(MakeCoordinate(x + n, y));
-		coordinates.push_back(MakeCoordinate(x - n, y - n));
-		coordinates.push_back(MakeCoordinate(x, y - n));
-		coordinates.push_back(MakeCoordinate(x + n, y - n));
+		coordinates.push_back(Coordinate(x - n, y + n));
+		coordinates.push_back(Coordinate(x, y + n));
+		coordinates.push_back(Coordinate(x + n, y + n));
+		coordinates.push_back(Coordinate(x - n, y));
+		coordinates.push_back(Coordinate(x + n, y));
+		coordinates.push_back(Coordinate(x - n, y - n));
+		coordinates.push_back(Coordinate(x, y - n));
+		coordinates.push_back(Coordinate(x + n, y - n));
 	}
 	
 	Nodes nodes;

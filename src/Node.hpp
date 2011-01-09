@@ -22,7 +22,7 @@ public:
 	inline GameObjects getGameObjects() { return mGameObjects; }
 	
 	bool isAccessible() const;
-	Coordinate getCoordinate() const { return MakeCoordinate(getX(), getY()); }
+	Coordinate getCoordinate() const { return Coordinate(getX(), getY()); }
 	
 	bool operator==(Node* obj) const;
 protected:

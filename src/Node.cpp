@@ -5,13 +5,6 @@
 
 using std::vector;
 
-Coordinate MakeCoordinate(int x, int y) {
-	Coordinate tmp;
-	tmp.x = x;
-	tmp.y = y;
-	return tmp;
-}
-
 int ConvertXCoordinate(int x) {
 	return x * 32;
 }

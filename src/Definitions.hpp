@@ -7,11 +7,17 @@
 #define PATH_TO_IMAGES "assets/images/"
 #define PATH_TO_SCRIPTS "assets/scripts/"
 
-typedef struct {
-	int x, y;
-} Coordinate;
+class Coordinate {
+public:
+  Coordinate(int x, int y);
+  inline void setX(int x) { mX = x; }
+  inline void setY(int y) { mY = y; }
+  inline int getX() const { return mX; }
+  inline int getY() const { return mY; }
+protected:
+  int mX, mY;
+};
 
-Coordinate MakeCoordinate(int x, int y);
 // converts to screen coordinates
 int ConvertXCoordinate(int x);
 int ConvertYCoordinate(int y);

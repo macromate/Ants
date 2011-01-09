@@ -46,11 +46,11 @@ int main (int argc, char * const argv[]) {
 //	}
 	//delete p;
 	
-	Ant *ant1 = new Ant(StrainYellow, MakeCoordinate(4, 6));
-	Ant *ant2 = new Ant(StrainRed, MakeCoordinate(8, 6));
+	Ant *ant1 = new Ant(StrainYellow, Coordinate(4, 6));
+	Ant *ant2 = new Ant(StrainRed, Coordinate(8, 6));
 	objectManager->add(ant1);
 	objectManager->add(ant2);
-	Spice *spice = new Spice(MakeCoordinate(5, 7));
+	Spice *spice = new Spice(Coordinate(5, 7));
 	objectManager->add(spice);
 	
 	sf::Sprite grassSprite;

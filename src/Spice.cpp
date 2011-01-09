@@ -9,7 +9,7 @@ Spice::Spice(Coordinate coor) {
 	setNode(NodeManager::getInstance()->getNode(coor));
 	mSprite = new Sprite();
 	mSprite->SetImage(*AssetManager::getInstance()->getImage("spice.png"));
-	mSprite->SetPosition(ConvertXCoordinate(coor.x), ConvertYCoordinate(coor.y));
+	mSprite->SetPosition(ConvertXCoordinate(coor.getX()), ConvertYCoordinate(coor.getY()));
 }
 
 Spice::~Spice() {
