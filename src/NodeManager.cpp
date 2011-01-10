@@ -97,6 +97,7 @@ Nodes NodeManager::getNodesInRadius(Node* node, int radius) const {
 	int y = node->getY();
 	vector<Coordinate> coordinates;
 	for (int n = 1; n <= radius; n++) {
+        n = n * 32;
 		coordinates.push_back(Coordinate(x - n, y + n));
 		coordinates.push_back(Coordinate(x, y + n));
 		coordinates.push_back(Coordinate(x + n, y + n));

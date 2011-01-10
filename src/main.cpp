@@ -9,6 +9,7 @@
 #include "Signal.hpp"
 #include "Spice.hpp"
 #include "Sprite.hpp"
+#include "Hill.hpp"
 
 #include <SFML/Graphics.hpp>
 
@@ -37,20 +38,18 @@ int main (int argc, char * const argv[]) {
 			}
 		}
 	}
-
-//	Path path;
-//	Pathfinder *p = new Pathfinder(nodeManager->getNode(1, 3), nodeManager->getNode(24, 25));
-//	path = p->search();
-//	Path::iterator i = path.begin();
-//	for (; i < path.end(); i++) {
-//		std::cout << (*i).x << "/" << (*i).y << std::endl;
-//	}
-	//delete p;
+	
+    Hill* hill1 = new Hill(StrainYellow, nodeManager->getNode(2 * 32, 4 * 32));
+    Hill* hill2 = new Hill(StrainRed, nodeManager->getNode(6 * 32, 12 * 32));
+    Hill* hill3 = new Hill(StrainBlue, nodeManager->getNode(4 * 32, 9 * 32));
+    objectManager->add(hill1);
+    objectManager->add(hill2);
+    objectManager->add(hill3);
 	
 	Ant *ant1 = new Ant(StrainYellow, Coordinate(4 * 32, 6 * 32));
     Ant *ant2 = new Ant(StrainRed, Coordinate(8 * 32, 6 * 32));
     Ant *ant3 = new Ant(StrainRed, Coordinate(14*32, 2*32));
-    Ant *ant4 = new Ant(StrainRed, Coordinate(16*32, 12*32));
+    Ant *ant4 = new Ant(StrainBlue, Coordinate(16*32, 12*32));
 	objectManager->add(ant1);
     objectManager->add(ant2);
     objectManager->add(ant3);
