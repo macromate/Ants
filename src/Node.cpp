@@ -14,10 +14,11 @@ mGameObjects(),
 mSprite()
 {
     mSprite = new ants::Sprite();
-    mSprite->SetImage(*AssetManager::getInstance()->getImage("grass.png"));
+	sf::Image* img = AssetManager::getInstance()->getImage("grass.png");
+	img->SetSmooth(false);
+    mSprite->SetImage(*img);
 	mSprite->SetCenter(0, 0);
     mSprite->SetPosition(x, y);
-	mSprite->SetBlendMode(sf::Blend::None);
 }
 
 Node::~Node() {
