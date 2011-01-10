@@ -38,4 +38,14 @@ enum Strain {
 	StrainYellow = 3
 };
 
+enum Direction {
+  North, South,
+  East, West,
+  NorthEast, NorthWest,
+  SouthEast, SouthWest  
+};
+
+#include <SFML/System/Vector2.hpp>
+Direction directionForVector(const sf::Vector2f&);
+
 #endif

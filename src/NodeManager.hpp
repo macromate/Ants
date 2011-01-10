@@ -2,9 +2,8 @@
 #ifndef NODE_MANAGER_HPP
 #define NODE_MANAGER_HPP
 
+#include "Definitions.hpp"
 #include "Node.hpp"
-
-#include <SFML/System/Vector2.hpp>
 
 #include <vector>
 #include <iostream>

@@ -45,6 +45,11 @@ protected:
 	int mStrength;
 	AntAction mCurrentAction;
 	Node* mMoveTarget;
+    sf::Vector2f mDirectionToMoveTarget;
+    float mTargetAngle; // winkel der ameise relativ zum ziel in grad
+
+private:
+    int getAngleForDirectionVector(sf::Vector2f&) const; // in grad
 };
 
 #endif
