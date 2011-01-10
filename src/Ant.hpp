@@ -9,7 +9,6 @@
 #include "AssetManager.hpp"
 #include "Pathfinder.hpp"
 
-#include <SFML/Graphics/Sprite.hpp>
 #include <iostream>
 
 class Node;

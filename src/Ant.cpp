@@ -8,7 +8,7 @@
 #include <cassert>
 
 using std::vector;
-using sf::Sprite;
+using ants::Sprite;
 using sf::Vector2f;
 
 Ant::Ant(Strain strain, Coordinate coor) :
@@ -24,7 +24,6 @@ Ant::Ant(Strain strain, Coordinate coor) :
     mSprite = new Sprite();
     mSprite->SetImage(*AssetManager::getInstance()->getImage("ant.png")); // todo: image gets probably copied here
     mSprite->SetPosition(coor.getX(), coor.getY());
-    mSprite->SetCenter(16.0f, 16.0f); // sprite is 32 pixel
     setNode(NodeManager::getInstance()->getNode(coor)); // sets virtual position
     //std::cout << "Ant constructor" << std::endl;
 }
@@ -86,7 +85,11 @@ void Ant::handleCurrentAction(float deltaTime) {
 		if (nextDirAngle > 360) {
 			nextDirAngle = 45;
 		}
-        if(mMoveTarget && ((spriteRot >= mTargetAngle 
+		float angle = mTargetAngle;
+		if (angle == 360) {
+			angle = 0;
+		}
+        if(mMoveTarget && ((spriteRot >= angle 
 						   && spriteRot < nextDirAngle)
 						   || (spriteRot == 180 && mTargetAngle == 0))) {
             // ziel ist vorhanden

@@ -1,5 +1,6 @@
 #include "Node.hpp"
 #include "GameObject.hpp"
+#include "AssetManager.hpp"
 
 #include <algorithm>
 
@@ -9,11 +10,21 @@ Node::Node(int x, int y) :
 mX(x),
 mY(y),
 mCost(0.0),
-mGameObjects()
+mGameObjects(),
+mSprite()
 {
+    mSprite = new ants::Sprite();
+    mSprite->SetImage(*AssetManager::getInstance()->getImage("grass.png"));
+	mSprite->SetCenter(0, 0);
+    mSprite->SetPosition(x, y);
+	mSprite->SetBlendMode(sf::Blend::None);
 }
 
 Node::~Node() {
+    if(mSprite) {
+        delete mSprite;
+        mSprite = 0;
+    }
 }
 
 void Node::addGameObject(GameObject* gameObject) {

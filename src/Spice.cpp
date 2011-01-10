@@ -1,13 +1,12 @@
 #include "Spice.hpp"
 #include "NodeManager.hpp"
 #include "AssetManager.hpp"
-#include <SFML/Graphics/Sprite.hpp>
-using sf::Sprite;
+// #include "Sprite.hpp"
 
 Spice::Spice(Coordinate coor) {
 	GameObject::GameObject();
 	setNode(NodeManager::getInstance()->getNode(coor));
-	mSprite = new Sprite();
+	mSprite = new ants::Sprite();
 	mSprite->SetImage(*AssetManager::getInstance()->getImage("spice.png"));
 	mSprite->SetPosition(coor.getX(), coor.getY());
 }

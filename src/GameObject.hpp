@@ -5,7 +5,7 @@
 #include "Definitions.hpp"
 #include "EventManager.hpp"
 
-#include <SFML/Graphics/Sprite.hpp>
+#include "Sprite.hpp"
 
 class Node;
 
@@ -26,7 +26,7 @@ public:
 	inline void setRadius(int radius) { mRadius = radius; }
 	inline int getRadius() const { return mRadius; }
 	
-	inline sf::Sprite* getSprite() const { return mSprite; }
+	inline ants::Sprite* getSprite() const { return mSprite; }
 	inline bool hasSprite() const { return !!(mSprite); }
 	
 	// checks all event triggers
@@ -39,7 +39,7 @@ protected:
 	Node *mNode;
 	int mRadius;
 	GameObjects mObjectsInRadius;
-	sf::Sprite* mSprite;
+	ants::Sprite* mSprite;
   int mId;
   static int sHighestId;
 };

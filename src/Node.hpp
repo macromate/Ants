@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include "Definitions.hpp"
+#include "Sprite.hpp"
 
 class GameObject;
 
@@ -21,6 +22,8 @@ public:
 	void removeGameObject(GameObject* gameObject);
 	inline GameObjects getGameObjects() { return mGameObjects; }
 	
+    inline ants::Sprite* getSprite() const { return mSprite; }
+	
 	bool isAccessible() const;
 	Coordinate getCoordinate() const { return Coordinate(getX(), getY()); }
 	
@@ -29,8 +32,8 @@ protected:
 	int mX, mY;
 	float mCost;
 	// game objects associated with this node, for determinating the costs, 
-	//NOTE: vector may be not the best way to do this because objects are often deleted from this
 	GameObjects mGameObjects;
+    ants::Sprite* mSprite;
 };
 
 #endif

@@ -8,6 +8,7 @@
 #include "Pathfinder.hpp"
 #include "Signal.hpp"
 #include "Spice.hpp"
+#include "Sprite.hpp"
 
 #include <SFML/Graphics.hpp>
 
@@ -59,19 +60,17 @@ int main (int argc, char * const argv[]) {
     ants.push_back(ant2);
     ants.push_back(ant3);
     ants.push_back(ant4);
-    Spice *spice = new Spice(Coordinate(5 * 32, 5 * 32));
-    objectManager->add(spice);
-	
-	
-  // ant1->handleCurrentAction(1.0f);
-  
-  // std::cout << "MoveTargetNode: " << ant1->getMoveTarget()->getX() << "/" << ant1->getMoveTarget()->getY() << std::endl;
-	
-	
-	
-	sf::Sprite grassSprite;
-	grassSprite.SetImage(*AssetManager::getInstance()->getImage("grass.png"));
-	
+//    Spice *spice = new Spice(Coordinate(5 * 32, 5 * 32));
+//    objectManager->add(spice);
+    
+	sf::Image img;
+	img.LoadFromFile(std::string(PATH_TO_IMAGES) + "grass.png");
+    sf::Sprite s1;
+    s1.SetImage(img);
+    s1.SetCenter(16, 16);
+    s1.SetBlendMode(sf::Blend::None);
+    
+    
     sf::RenderWindow App(sf::VideoMode(640, 480), "Ants");
     while (App.IsOpened())
     {
@@ -90,17 +89,25 @@ int main (int argc, char * const argv[]) {
         App.Clear();
 		
         objectManager->trigger();
+//		s1.SetPosition(16+(3*32), 16+(5*32));
+//		App.Draw(s1);
+//		s1.SetPosition(16+(4*32), 16+(5*32));
+//		App.Draw(s1);
+//		s1.SetPosition(16+(5*32), 16+(5*32));
+//		App.Draw(s1);
+//        //for (int y = 0; y <= 4; y++) {
+//            for (int x = 0; x <= 4; x++) {
+//                s1.SetPosition(8+(x*16-1), 8+(y*16-1));
+//				App.Draw(s1);
+//            }
+//        }
 		
-		// display nodes
-		Nodes nodes = nodeManager->getNodes();
-		Nodes::iterator n = nodes.begin();
-		for (; n < nodes.end(); n++) {
-			Node* node = *n;
-			int x = node->getX();
-			int y = node->getY();
-			grassSprite.SetPosition(x, y);
-			App.Draw(grassSprite);
-		}
+        //display nodes
+        Nodes nodes = nodeManager->getNodes();
+        Nodes::iterator n = nodes.begin();
+        for (; n < nodes.end(); n++) {
+			App.Draw(*(*n)->getSprite());
+        }
 		
 		// update ants
         Ants::iterator a = ants.begin();
