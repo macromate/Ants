@@ -1,6 +1,10 @@
 #include "ScriptManager.hpp"
 
 #include "Ant.hpp"
+#include "Node.hpp"
+#include "NodeManager.hpp"
+
+#include <boost/python/suite/indexing/vector_indexing_suite.hpp>
 
 #include <iostream>
 #include <stdio.h>
@@ -20,11 +24,25 @@ BOOST_PYTHON_MODULE(Ants) {
   class_<GameObject>("GameObject", no_init)
     .def("get_radius", &GameObject::getRadius)
     .def("set_radius", &GameObject::setRadius)
-    .def("get_id", &GameObject::getId);
+    .def("get_id", &GameObject::getId)
+    .def("get_node", &GameObject::getNode, return_value_policy<reference_existing_object>());
     
-  // class_<Ant>("Ant", no_init)
-  //   .def("get_radius", &Ant::getRadius)
-  //   .def("set_radius", &Ant::setRadius);
+  class_<Node, boost::noncopyable>("Node", no_init)
+    .def("get_coordinate", &Node::getCoordinate, return_value_policy<return_by_value>());
+
+  Node* (NodeManager::*getNode1)(int, int) = &NodeManager::getNode;
+  Node* (NodeManager::*getNode2)(Coordinate) = &NodeManager::getNode;
+    
+  class_<NodeManager, boost::noncopyable>("NodeManager", no_init)
+    .def("get_neighbour_nodes", &NodeManager::getNeighbourNodes)
+    .def("get_node", getNode1, return_value_policy<reference_existing_object>())
+    .def("get_node", getNode2, return_value_policy<reference_existing_object>());
+    
+  class_<Nodes>("Nodes")
+    .def(vector_indexing_suite<Nodes>());
+    
+  class_<Ant, bases<GameObject> >("Ant", no_init)
+    .def("set_move_target", &Ant::setMoveTarget);
 }
 
 ScriptManager *ScriptManager::mInstance = 0;
@@ -39,6 +57,11 @@ ScriptManager* ScriptManager::getInstance() {
 ScriptManager::ScriptManager() {
   Py_Initialize();
   initAnts();
+  
+  // register node manager
+  object main_module(handle<>(borrowed(PyImport_AddModule("__main__"))));
+  object main_namespace = main_module.attr("__dict__");
+  main_namespace["nodeManager"] = ptr(NodeManager::getInstance());
 }
 
 ScriptManager::ScriptManager(const ScriptManager& ref) {

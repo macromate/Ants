@@ -11,7 +11,7 @@ public:
   virtual GameObjects getReceivers() const = 0;
   inline virtual EventType getEventType() const { return mEventType; }
 protected:
-  virtual inline EventType setEventType(EventType type) { mEventType = type; }
+  virtual inline void setEventType(EventType type) { mEventType = type; }
   EventType mEventType;
 };
 

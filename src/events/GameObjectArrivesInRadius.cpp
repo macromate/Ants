@@ -10,7 +10,7 @@ mObjectInRadius(objectInRadius)
 // TODO: return a c array here ??
 GameObjects GameObjectArrivesInRadius::getReceivers() const {
   GameObjects objects;
-  objects.push_back(mCenterObject);
+  // objects.push_back(mCenterObject);
   objects.push_back(mObjectInRadius);
   return objects;
 }

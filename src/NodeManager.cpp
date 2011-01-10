@@ -33,9 +33,11 @@ void NodeManager::addNode(Node* node) {
 
 Node* NodeManager::getNode(int x, int y) {
 	Nodes::iterator i = mNodes.begin();
-	for (; i < mNodes.end(); i++)
-		if ((*i)->getX() == x && (*i)->getY() == y)
+	for (; i < mNodes.end(); i++) {
+		if ((*i)->getX() == (x) && (*i)->getY() == (y)) {
 			return *i;
+		}
+	}
 	return 0;
 }
 
@@ -45,21 +47,21 @@ Node* NodeManager::getNode(Coordinate coor) {
 
 Nodes NodeManager::getNeighbourNodes(Node* node) {
 	Nodes neighbours = Nodes();
-	Coordinate coor = Coordinate(node->getX() - 1, node->getY() + 1);
+	Coordinate coor = Coordinate(node->getX() - PIXELS_PER_NODE, node->getY() + PIXELS_PER_NODE);
 	if(isIncluded(coor)) neighbours.push_back(getNode(coor));
-	coor = Coordinate(node->getX(), node->getY() + 1);
+	coor = Coordinate(node->getX(), node->getY() + PIXELS_PER_NODE);
 	if(isIncluded(coor)) neighbours.push_back(getNode(coor));
-	coor = Coordinate(node->getX() + 1, node->getY() + 1);
+	coor = Coordinate(node->getX() + PIXELS_PER_NODE, node->getY() + PIXELS_PER_NODE);
 	if(isIncluded(coor)) neighbours.push_back(getNode(coor));
-	coor = Coordinate(node->getX() - 1, node->getY());
+	coor = Coordinate(node->getX() - PIXELS_PER_NODE, node->getY());
 	if(isIncluded(coor)) neighbours.push_back(getNode(coor));
-	coor = Coordinate(node->getX() + 1, node->getY());
+	coor = Coordinate(node->getX() + PIXELS_PER_NODE, node->getY());
 	if(isIncluded(coor)) neighbours.push_back(getNode(coor));
-	coor = Coordinate(node->getX() - 1, node->getY() - 1);
+	coor = Coordinate(node->getX() - PIXELS_PER_NODE, node->getY() - PIXELS_PER_NODE);
 	if(isIncluded(coor)) neighbours.push_back(getNode(coor));
-	coor = Coordinate(node->getX(), node->getY() - 1);
+	coor = Coordinate(node->getX(), node->getY() - PIXELS_PER_NODE);
 	if(isIncluded(coor)) neighbours.push_back(getNode(coor));
-	coor = Coordinate(node->getX() + 1, node->getY() - 1);
+	coor = Coordinate(node->getX() + PIXELS_PER_NODE, node->getY() - PIXELS_PER_NODE);
 	if(isIncluded(coor)) neighbours.push_back(getNode(coor));
 	
 	return neighbours;
@@ -69,6 +71,12 @@ bool NodeManager::isIncluded(Coordinate coor) {
 	return coor.getX() >= mLeftBorder && coor.getY() >= mBottomBorder &&
 		   coor.getX() <= mRightBorder && coor.getY() <= mTopBorder;
 }
+
+bool NodeManager::isIncluded(sf::Vector2f coor) {
+	return coor.x >= mLeftBorder && coor.y >= mBottomBorder &&
+		   coor.x <= mRightBorder && coor.y <= mTopBorder;
+}
+
 
 bool NodeManager::areNodesDiagonal(Node* n1, Node* n2) {
 	return (n1->getX() - 1 == n2->getX() && n1->getY() + 1 == n2->getY()) ||

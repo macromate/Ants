@@ -4,8 +4,8 @@
 
 #include <vector>
 
-#define PATH_TO_IMAGES "assets/images/"
-#define PATH_TO_SCRIPTS "assets/scripts/"
+#define PATH_TO_IMAGES "/Users/christoph/Desktop/Ants/assets/images/"
+#define PATH_TO_SCRIPTS "/Users/christoph/Desktop/Ants/assets/scripts/"
 
 class Coordinate {
 public:
@@ -17,10 +17,6 @@ public:
 protected:
   int mX, mY;
 };
-
-// converts to screen coordinates
-int ConvertXCoordinate(int x);
-int ConvertYCoordinate(int y);
 
 class GameObject;
 typedef std::vector<GameObject*> GameObjects;

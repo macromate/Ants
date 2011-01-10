@@ -49,16 +49,12 @@ void GameObject::receiveEvent(Event* event) {
   using namespace boost::python;
   ScriptManager* sm = ScriptManager::getInstance();
   if (event->getEventType() == ETYPE_IN_RADIUS) {
-    
     GameObjectArrivesInRadius* new_event = static_cast<GameObjectArrivesInRadius*>(event);
-    GameObject* ant = new_event->getObjectInRadius();
-    sm->registerGameObject("ant", ant);
+    sm->registerGameObject("ant", new_event->getObjectInRadius());
+    sm->registerGameObject("self", new_event->getCenterObject());
     sm->startScript("ant_arrives_in_radius");
-    
   } else if (event->getEventType() == ETYPE_LEAVES_RADIUS) {
-    
 	  sm->startScript("ant_leaves_from_radius");
-	  
 	} else {
 		std::cout << "GameObject received unspecified event" << std::endl;
 	}

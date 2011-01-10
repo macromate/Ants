@@ -2,9 +2,15 @@
 #ifndef NODE_MANAGER_HPP
 #define NODE_MANAGER_HPP
 
+#include "Node.hpp"
+
+#include <SFML/System/Vector2.hpp>
+
 #include <vector>
 #include <iostream>
-#include "Node.hpp"
+
+
+#define PIXELS_PER_NODE 32
 
 typedef std::vector<Node*> Nodes;
 
@@ -19,6 +25,7 @@ public:
 	Nodes getNodesInRadius(Node* node, int radius);
 	inline Nodes getNodes() const { return mNodes; }
 	bool isIncluded(Coordinate coor);
+    bool isIncluded(sf::Vector2f);
 	bool areNodesDiagonal(Node*, Node*);
 protected:
 	static NodeManager* mInstance;

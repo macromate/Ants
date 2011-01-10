@@ -5,14 +5,6 @@
 
 using std::vector;
 
-int ConvertXCoordinate(int x) {
-	return x * 32;
-}
-
-int ConvertYCoordinate(int y) {
-	return y * 32;
-}
-
 Node::Node(int x, int y) : 
 mX(x),
 mY(y),
