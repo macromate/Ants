@@ -47,20 +47,20 @@ int main (int argc, char * const argv[]) {
 	//delete p;
 	
 	Ant *ant1 = new Ant(StrainYellow, Coordinate(4 * 32, 6 * 32));
-    // Ant *ant2 = new Ant(StrainRed, Coordinate(8 * 32, 6 * 32));
-    //     Ant *ant3 = new Ant(StrainRed, Coordinate(14*32, 2*32));
-    //     Ant *ant4 = new Ant(StrainRed, Coordinate(16*32, 12*32));
+    Ant *ant2 = new Ant(StrainRed, Coordinate(8 * 32, 6 * 32));
+    Ant *ant3 = new Ant(StrainRed, Coordinate(14*32, 2*32));
+    Ant *ant4 = new Ant(StrainRed, Coordinate(16*32, 12*32));
 	objectManager->add(ant1);
-    // objectManager->add(ant2);
-    // objectManager->add(ant3);
-    // objectManager->add(ant4);
+    objectManager->add(ant2);
+    objectManager->add(ant3);
+    objectManager->add(ant4);
     Ants ants;
     ants.push_back(ant1);
-    // ants.push_back(ant2);
-    //    ants.push_back(ant3);
-    //    ants.push_back(ant4);
-    // Spice *spice = new Spice(Coordinate(5, 5));
-    // objectManager->add(spice);
+    ants.push_back(ant2);
+    ants.push_back(ant3);
+    ants.push_back(ant4);
+    Spice *spice = new Spice(Coordinate(5 * 32, 5 * 32));
+    objectManager->add(spice);
 	
 	
   // ant1->handleCurrentAction(1.0f);

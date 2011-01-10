@@ -28,15 +28,18 @@ BOOST_PYTHON_MODULE(Ants) {
     .def("get_node", &GameObject::getNode, return_value_policy<reference_existing_object>());
     
   class_<Node, boost::noncopyable>("Node", no_init)
-    .def("get_coordinate", &Node::getCoordinate, return_value_policy<return_by_value>());
+    .def("get_coordinate", &Node::getCoordinate, return_value_policy<return_by_value>())
+    .def("get_x", &Node::getX)
+    .def("get_y", &Node::getY);
 
-  Node* (NodeManager::*getNode1)(int, int) = &NodeManager::getNode;
-  Node* (NodeManager::*getNode2)(Coordinate) = &NodeManager::getNode;
+  Node* (NodeManager::*getNode1)(int, int) const = &NodeManager::getNode;
+  Node* (NodeManager::*getNode2)(Coordinate) const = &NodeManager::getNode;
     
   class_<NodeManager, boost::noncopyable>("NodeManager", no_init)
     .def("get_neighbour_nodes", &NodeManager::getNeighbourNodes)
     .def("get_node", getNode1, return_value_policy<reference_existing_object>())
-    .def("get_node", getNode2, return_value_policy<reference_existing_object>());
+    .def("get_node", getNode2, return_value_policy<reference_existing_object>())
+    .def("get_random_node", &NodeManager::getRandomNode, return_value_policy<reference_existing_object>());
     
   class_<Nodes>("Nodes")
     .def(vector_indexing_suite<Nodes>());

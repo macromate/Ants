@@ -1,4 +1,6 @@
 #include "NodeManager.hpp"
+#include <algorithm>
+#include <SFML/System/Randomizer.hpp>
 
 NodeManager *NodeManager::mInstance = 0;
 
@@ -31,8 +33,8 @@ void NodeManager::addNode(Node* node) {
 	if(node->getY() > mTopBorder) mTopBorder = node->getY();
 }
 
-Node* NodeManager::getNode(int x, int y) {
-	Nodes::iterator i = mNodes.begin();
+Node* NodeManager::getNode(int x, int y) const {
+	Nodes::const_iterator i = mNodes.begin();
 	for (; i < mNodes.end(); i++) {
 		if ((*i)->getX() == (x) && (*i)->getY() == (y)) {
 			return *i;
@@ -41,11 +43,11 @@ Node* NodeManager::getNode(int x, int y) {
 	return 0;
 }
 
-Node* NodeManager::getNode(Coordinate coor) {
+Node* NodeManager::getNode(Coordinate coor) const {
 	return getNode(coor.getX(), coor.getY());
 }
 
-Nodes NodeManager::getNeighbourNodes(Node* node) {
+Nodes NodeManager::getNeighbourNodes(Node* node) const {
 	Nodes neighbours = Nodes();
 	Coordinate coor = Coordinate(node->getX() - PIXELS_PER_NODE, node->getY() + PIXELS_PER_NODE);
 	if(isIncluded(coor)) neighbours.push_back(getNode(coor));
@@ -67,28 +69,28 @@ Nodes NodeManager::getNeighbourNodes(Node* node) {
 	return neighbours;
 }
 
-bool NodeManager::isIncluded(Coordinate coor) {
+bool NodeManager::isIncluded(Coordinate coor) const {
 	return coor.getX() >= mLeftBorder && coor.getY() >= mBottomBorder &&
 		   coor.getX() <= mRightBorder && coor.getY() <= mTopBorder;
 }
 
-bool NodeManager::isIncluded(sf::Vector2f coor) {
+bool NodeManager::isIncluded(sf::Vector2f coor) const {
 	return coor.x >= mLeftBorder && coor.y >= mBottomBorder &&
 		   coor.x <= mRightBorder && coor.y <= mTopBorder;
 }
 
 
-bool NodeManager::areNodesDiagonal(Node* n1, Node* n2) {
+bool NodeManager::areNodesDiagonal(Node* n1, Node* n2) const {
+	// TODO: Remove??
 	return (n1->getX() - 1 == n2->getX() && n1->getY() + 1 == n2->getY()) ||
 		   (n1->getX() + 1 == n2->getX() && n1->getY() + 1 == n2->getY()) ||
 	       (n1->getX() - 1 == n2->getX() && n1->getY() - 1 == n2->getY()) ||
 		   (n1->getX() + 1 == n2->getX() && n1->getY() - 1 == n2->getY());
 }
 
-Nodes NodeManager::getNodesInRadius(Node* node, int radius) {
+Nodes NodeManager::getNodesInRadius(Node* node, int radius) const {
 	if (radius == 1)
 		return getNeighbourNodes(node);
-	
 	
 	// TODO: Use a C Array here??
 	int x = node->getX();
@@ -113,4 +115,15 @@ Nodes NodeManager::getNodesInRadius(Node* node, int radius) {
 		}
 	}
 	return nodes;
+}
+
+bool NodeManager::areNeighbours(Node* n1, Node* n2) const {
+    Nodes neighbours = getNeighbourNodes(n1);
+    Nodes::iterator result = std::find(neighbours.begin(), neighbours.end(), n2);
+    return result != neighbours.end();
+}
+
+Node* NodeManager::getRandomNode() const {
+    int random = sf::Randomizer::Random(0, mNodes.size() - 1);
+    return mNodes[random];
 }

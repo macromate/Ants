@@ -18,14 +18,16 @@ public:
 	static NodeManager *getInstance();
 	virtual ~NodeManager();
 	void addNode(Node* node);
-	Node* getNode(int x, int y);
-	Node* getNode(Coordinate coor);
-	Nodes getNeighbourNodes(Node*);
-	Nodes getNodesInRadius(Node* node, int radius);
+	Node* getNode(int x, int y) const;
+	Node* getNode(Coordinate coor) const;
+	Nodes getNeighbourNodes(Node*) const;
+	Nodes getNodesInRadius(Node* node, int radius) const;
 	inline Nodes getNodes() const { return mNodes; }
-	bool isIncluded(Coordinate coor);
-    bool isIncluded(sf::Vector2f);
-	bool areNodesDiagonal(Node*, Node*);
+	bool isIncluded(Coordinate coor) const;
+    bool isIncluded(sf::Vector2f) const;
+	bool areNodesDiagonal(Node*, Node*) const;
+    bool areNeighbours(Node*, Node*) const;
+    Node* getRandomNode() const;
 protected:
 	static NodeManager* mInstance;
 	Nodes mNodes;

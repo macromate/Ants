@@ -7,6 +7,7 @@
 #include "Spice.hpp"
 #include "Twig.hpp"
 #include "AssetManager.hpp"
+#include "Pathfinder.hpp"
 
 #include <SFML/Graphics/Sprite.hpp>
 #include <iostream>
@@ -30,7 +31,7 @@ public:
 
     void handleCurrentAction(float deltaTime);
 
-    inline void setMoveTarget(Node* node) { mMoveTarget = node; }
+    void setMoveTarget(Node*);
     inline Node* getMoveTarget() const { return mMoveTarget; }
 
 	void setNode(Node*);
@@ -44,10 +45,10 @@ protected:
 	GameObject* mInventory;
 	int mStrength;
 	AntAction mCurrentAction;
-	Node* mMoveTarget;
+	Node* mMoveTarget; // ein angrenzender node, das nächste ziel
     sf::Vector2f mDirectionToMoveTarget;
     float mTargetAngle; // winkel der ameise relativ zum ziel in grad
-
+    Path mPath; // ein path, der nacheinander abgearbeitet wird
 private:
     int getAngleForDirectionVector(sf::Vector2f&) const; // in grad
 };

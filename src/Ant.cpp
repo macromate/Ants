@@ -3,7 +3,9 @@
 #include "Node.hpp"
 #include "ScriptManager.hpp"
 #include "Event.hpp"
+#include "Pathfinder.hpp"
 #include <cstdlib> // for abs
+#include <cassert>
 
 using std::vector;
 using sf::Sprite;
@@ -146,31 +148,28 @@ void Ant::handleCurrentAction(float deltaTime) {
             mSprite->Rotate(mTargetAngle * deltaTime);
         } else {
             // ziel ist nicht vorhanden
-            using namespace boost::python;
-            ScriptManager* sm = ScriptManager::getInstance();
-            sm->registerGameObject("self", this);
-            sm->startScript("Move");
+            // entweder script aufrufen
+            // oder schauen ob es einen
+            // pfad gibt, der noch nicht 
+            // fertig ist
+            
+            if (mPath.empty()) {
+                // script zur zielbestimmung verwenden
+                using namespace boost::python;
+                ScriptManager* sm = ScriptManager::getInstance();
+                sm->registerGameObject("self", this);
+                sm->startScript("Move");
 
-            // überprüfen ob ziel gesetzt wurde
-            if(!mMoveTarget) {
-                // TODO: throw severe error
+                // überprüfen ob ziel gesetzt wurde
+                if(!mMoveTarget) {
+                    // TODO: throw severe error
+                }
+            } else {
+                // ziel wird durch pfad bestimmt
+                Node* nextNode = mPath[0];
+                mPath.erase(mPath.begin());
+                setMoveTarget(nextNode);
             }
-
-            // überprüfen ob ziel ein nachbarnode ist
-
-            // überprüfen ob ziel begehbar ist
-            // sollte eigentlich im skript passieren
-            // hier wird dann ein fehler angezeigt
-
-            // ziel direction setzen
-            mDirectionToMoveTarget.x = (mMoveTarget->getX() - getNode()->getX()) / PIXELS_PER_NODE;
-            mDirectionToMoveTarget.y = (mMoveTarget->getY() - getNode()->getY()) / PIXELS_PER_NODE;
-
-            // relativer Winkel Ameise / Zielnode
-            mTargetAngle = getAngleForDirectionVector(mDirectionToMoveTarget);
-			if (mTargetAngle == 0) {
-				mTargetAngle = 360;
-			}
         }
     }
 }
@@ -193,4 +192,36 @@ int Ant::getAngleForDirectionVector(Vector2f &direction) const {
         case SouthWest: return 135;
     }
     return 0;
+}
+
+void Ant::setMoveTarget(Node* node) {
+    // wenn das ziel ein nachbarnode ist, dann proceed
+    // sonst wird ein pfad erstellt und der erste node darauf
+    // als ziel genommen
+    
+    // TODO: replace check with exception
+    assert(getNode() != node);
+    
+    if (NodeManager::getInstance()->areNeighbours(getNode(), node)) {
+        // ziel ist ein nachbar 
+        // TODO: überprüfen ob ziel begehbar ist, das sollte eigentlich im skript passieren
+        // hier wird dann eine exception geworfen (auf die das script reagieren kann??)
+        mMoveTarget = node;
+        // ziel direction setzen
+        mDirectionToMoveTarget.x = (mMoveTarget->getX() - getNode()->getX()) / PIXELS_PER_NODE;
+        mDirectionToMoveTarget.y = (mMoveTarget->getY() - getNode()->getY()) / PIXELS_PER_NODE;
+        // relativer Winkel Ameise / Zielnode
+        mTargetAngle = getAngleForDirectionVector(mDirectionToMoveTarget);
+        if (mTargetAngle == 0) {
+            mTargetAngle = 360;
+        }
+    } else {
+        // pfad zu ziel berechnen
+        Pathfinder finder(getNode(), node);
+        mPath = finder.search();
+        assert(!mPath.empty());
+        Node* firstNode = mPath[0];
+        mPath.erase(mPath.begin());
+        setMoveTarget(firstNode);
+    }
 }

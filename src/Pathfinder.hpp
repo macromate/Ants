@@ -30,7 +30,7 @@ protected:
 };
 
 typedef std::vector<PathfinderNode*> PathfinderNodes;
-typedef std::vector<Coordinate> Path;
+typedef std::vector<Node*> Path;
 typedef std::map<float, PathfinderNode*> PathfinderNodeMap;
 
 class NodeQueue {

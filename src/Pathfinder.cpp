@@ -134,8 +134,9 @@ Path Pathfinder::search() {
 	if (mTarget) {
 		PathfinderNodes::const_iterator i = mClosedList.begin();
 		for(; i < mClosedList.end(); i++) {
-			path.push_back((*i)->getNode()->getCoordinate());
+			path.push_back((*i)->getNode());
 		}
+        path.erase(path.begin()); // delete start node
 		return path;
 	} else {
 		return path;
