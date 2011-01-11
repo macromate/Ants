@@ -7,41 +7,46 @@
 #include <cstdlib> // for abs
 #include <algorithm>
 #include <iostream>
+#include <boost/shared_ptr.hpp>
 #include "NodeManager.hpp"
+
+class PathfinderNode;
+typedef	boost::shared_ptr<PathfinderNode> PathfinderNodePtr;
 
 class PathfinderNode {
 public:
-	PathfinderNode(Node *node);
-	PathfinderNode(Node* node, PathfinderNode* parent, Node* target);
+	PathfinderNode(Node* node);
+	PathfinderNode(Node* node, PathfinderNodePtr parent, Node* target);
 	~PathfinderNode();
-	void setParent(PathfinderNode* parent) { mParent = parent; calculateCosts(); }
-	PathfinderNode* getParent() const { return mParent; }
-	Node* getNode() const { return mNode; }
-	float getGCost() const { return mGCost; }
-	float getFCost() const { return mGCost + mHCost; }
-	bool isEqual(PathfinderNode* node);
+	inline void setParent(PathfinderNodePtr parent) { mParent = parent; calculateCosts(); }
+	inline PathfinderNodePtr getParent() const { return mParent; }
+	inline Node* getNode() const { return mNode; }
+	inline float getGCost() const { return mGCost; }
+	inline float getFCost() const { return mGCost + mHCost; }
+	bool isEqual(PathfinderNodePtr);
 protected:
 	Node *mNode;
-	PathfinderNode *mParent;
+	PathfinderNodePtr mParent;
 	float mGCost;
 	float mHCost;
 	Node* mTarget;
 	void calculateCosts();
 };
 
-typedef std::vector<PathfinderNode*> PathfinderNodes;
+typedef	boost::shared_ptr<PathfinderNode> PathfinderNodePtr;
+typedef std::vector<PathfinderNodePtr> PathfinderNodes;
 typedef std::vector<Node*> Path;
-typedef std::map<float, PathfinderNode*> PathfinderNodeMap;
+typedef std::map<float, PathfinderNodePtr> PathfinderNodeMap;
 
 class NodeQueue {
 public:
 	NodeQueue();
-	PathfinderNode* top() const;
+	PathfinderNodePtr top() const;
 	void pop();
-	bool includes(PathfinderNode* node) const;
+	bool includes(PathfinderNodePtr node) const;
 	bool empty() const;
-	void push(PathfinderNode* node);
-	void update(PathfinderNode* node);
+	void push(PathfinderNodePtr node);
+	void update(PathfinderNodePtr node);
 protected:
 	PathfinderNodeMap mMap;
 };
@@ -56,6 +61,5 @@ private:
 	Node* mTarget;
 	NodeQueue mOpenList;
 	PathfinderNodes mClosedList;
-	void addNeighbourNodesToOpenList(PathfinderNode*);
 };
 #endif
