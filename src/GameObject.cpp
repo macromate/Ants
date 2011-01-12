@@ -52,11 +52,13 @@ mObjectsInRadius() {
 }
 
 void GameObject::setNode(Node* node) {
-	if (mNode) // wenn ein voriger node existiert
+	if (mNode) {// wenn ein voriger node existiert
 		mNode->removeGameObject(this); // dann wird dieses objekt entfernt
+	}
 	mNode = node;
-	if (node) // im inventar haben objekte keinen node (Nullpointer)
+	if (node) {// im inventar haben objekte keinen node (Nullpointer)
 		mNode->addGameObject(this);
+	}
 }
 
 void GameObject::receiveEvent(Event* event) {
@@ -64,7 +66,7 @@ void GameObject::receiveEvent(Event* event) {
   ScriptManager* sm = ScriptManager::getInstance();
   if (event->getEventType() == ETYPE_IN_RADIUS) {
     GameObjectArrivesInRadius* new_event = static_cast<GameObjectArrivesInRadius*>(event);
-    sm->registerGameObject("ant", new_event->getObjectInRadius());
+    sm->registerGameObject("objectInRadius", new_event->getObjectInRadius());
     sm->registerGameObject("self", new_event->getCenterObject());
     sm->startScript("ant_arrives_in_radius");
   } else if (event->getEventType() == ETYPE_LEAVES_RADIUS) {
