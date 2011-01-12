@@ -11,23 +11,28 @@ GameObjectManager* GameObjectManager::getInstance() {
 }
 
 GameObjectManager::GameObjectManager() :
-mObjects() {
+mObjects(),
+mSpice() {
 	
 }
 
 GameObjectManager::~GameObjectManager() {
-	vector<GameObject*>::iterator i = mObjects.begin();
+    GameObjects::iterator i = mObjects.begin();
 	for (; i < mObjects.end(); i++)
 		delete *i;
 }
 
-GameObject* GameObjectManager::add(GameObject* obj) {
+void GameObjectManager::add(GameObject* obj) {
 	mObjects.push_back(obj);
-	return obj;
+}
+
+void GameObjectManager::addSpice(Spice* obj) {
+    mObjects.push_back(obj);
+    mSpice.push_back(obj);
 }
 
 void GameObjectManager::trigger() {
-	vector<GameObject*>::iterator i = mObjects.begin();
+	GameObjects::iterator i = mObjects.begin();
 	for (; i < mObjects.end(); i++)
 		(*i)->trigger();
 }

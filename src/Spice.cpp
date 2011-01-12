@@ -3,12 +3,11 @@
 #include "AssetManager.hpp"
 // #include "Sprite.hpp"
 
-Spice::Spice(Coordinate coor) {
-	GameObject::GameObject();
-	setNode(NodeManager::getInstance()->getNode(coor));
+Spice::Spice(Node* node) :
+GameObject(node) {
 	mSprite = new ants::Sprite();
 	mSprite->SetImage(*AssetManager::getInstance()->getImage("spice.png"));
-	mSprite->SetPosition(coor.getX(), coor.getY());
+	mSprite->SetPosition(node->getX(), node->getY());
 }
 
 Spice::~Spice() {

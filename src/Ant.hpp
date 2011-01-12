@@ -20,7 +20,7 @@ typedef enum {
 
 class Ant : public GameObject {
 public:
-	Ant(Strain, Coordinate);
+	Ant(Strain, Node*);
 	Ant(const Ant& ant);
 	virtual ~Ant();
 	virtual void receiveEvent(Event*);

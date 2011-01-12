@@ -2,18 +2,23 @@
 #ifndef GAME_OBJECT_MANAGER_HPP
 #define GAME_OBJECT_MANAGER_HPP
 
+#include "Definitions.hpp"
 #include "GameObject.hpp"
+#include "Spice.hpp"
 #include <vector>
 
 class GameObjectManager {
 public:
 	static GameObjectManager* getInstance();
 	virtual ~GameObjectManager();
-	GameObject* add(GameObject*);
+	void add(GameObject*);
+    void addSpice(Spice*);
 	void trigger();
-	inline std::vector<GameObject*> getObjects() const { return mObjects; }
+	inline GameObjects getObjects() const { return mObjects; }
+    inline std::vector<Spice*> getSpice() const { return mSpice; }
 protected:
-	std::vector<GameObject*> mObjects;
+	GameObjects mObjects;
+    std::vector<Spice*> mSpice;
 private:
 	GameObjectManager();
 	GameObjectManager(const GameObjectManager&);

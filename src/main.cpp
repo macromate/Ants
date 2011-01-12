@@ -39,28 +39,25 @@ int main (int argc, char * const argv[]) {
 		}
 	}
 	
-    Hill* hill1 = new Hill(StrainYellow, nodeManager->getNode(2 * 32, 4 * 32));
-    Hill* hill2 = new Hill(StrainRed, nodeManager->getNode(6 * 32, 12 * 32));
-    Hill* hill3 = new Hill(StrainBlue, nodeManager->getNode(4 * 32, 9 * 32));
+    Hill* hill1 = new Hill(StrainYellow, nodeManager->getEmptyRandomNode());
+    Hill* hill2 = new Hill(StrainRed, nodeManager->getEmptyRandomNode());
+    Hill* hill3 = new Hill(StrainBlue, nodeManager->getEmptyRandomNode());
     objectManager->add(hill1);
     objectManager->add(hill2);
     objectManager->add(hill3);
 	
-	Ant *ant1 = new Ant(StrainYellow, Coordinate(4 * 32, 6 * 32));
-    Ant *ant2 = new Ant(StrainRed, Coordinate(8 * 32, 6 * 32));
-    Ant *ant3 = new Ant(StrainRed, Coordinate(14*32, 2*32));
-    Ant *ant4 = new Ant(StrainBlue, Coordinate(16*32, 12*32));
-	objectManager->add(ant1);
-    objectManager->add(ant2);
-    objectManager->add(ant3);
-    objectManager->add(ant4);
     Ants ants;
-    ants.push_back(ant1);
-    ants.push_back(ant2);
-    ants.push_back(ant3);
-    ants.push_back(ant4);
-    Spice *spice = new Spice(Coordinate(5 * 32, 5 * 32));
-    objectManager->add(spice);
+    Strain antStrains[4] = { StrainYellow, StrainRed, StrainBlue, StrainRed };
+    for (int i = 0; i < 4; i++) {
+        Ant* ant = new Ant(antStrains[i], nodeManager->getEmptyRandomNode());
+        objectManager->add(ant);
+        ants.push_back(ant);
+    }
+
+    for (int i = 0; i < 4; i++) {
+        Spice *spice = new Spice(nodeManager->getEmptyRandomNode());
+        objectManager->addSpice(spice);
+    }
     
     sf::RenderWindow App(sf::VideoMode(640, 480), "Ants");
     while (App.IsOpened())

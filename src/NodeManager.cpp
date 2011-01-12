@@ -128,3 +128,11 @@ Node* NodeManager::getRandomNode() const {
     int random = sf::Randomizer::Random(0, mNodes.size() - 1);
     return mNodes[random];
 }
+
+Node* NodeManager::getEmptyRandomNode() const {
+    Node* node;
+    do {
+        node = getRandomNode();
+    } while(!node->isEmpty());
+	return node;
+}

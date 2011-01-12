@@ -7,7 +7,7 @@
 
 class Spice : public GameObject {
 public:
-	Spice(Coordinate);
+	Spice(Node*);
 	~Spice();
 };
 

@@ -11,7 +11,8 @@ using std::vector;
 using ants::Sprite;
 using sf::Vector2f;
 
-Ant::Ant(Strain strain, Coordinate coor) :
+Ant::Ant(Strain strain, Node* node) :
+    GameObject(node),
     mStrain(strain),
     mInventory(),
     mStrength(1),
@@ -20,11 +21,9 @@ Ant::Ant(Strain strain, Coordinate coor) :
     mDirectionToMoveTarget(),
     mTargetAngle()
 {
-    GameObject::GameObject();
     mSprite = new Sprite();
     mSprite->SetImage(*AssetManager::getInstance()->getImage("ant.png")); // todo: image gets probably copied here
-    mSprite->SetPosition(coor.getX(), coor.getY());
-    setNode(NodeManager::getInstance()->getNode(coor)); // sets virtual position
+    mSprite->SetPosition(node->getX(), node->getY());
     //std::cout << "Ant constructor" << std::endl;
 }
 

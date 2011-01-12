@@ -28,6 +28,7 @@ public:
 	bool areNodesDiagonal(Node*, Node*) const;
     bool areNeighbours(Node*, Node*) const;
     Node* getRandomNode() const;
+    Node* getEmptyRandomNode() const;
 protected:
 	static NodeManager* mInstance;
 	Nodes mNodes;

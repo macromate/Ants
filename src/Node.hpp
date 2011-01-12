@@ -17,7 +17,7 @@ public:
 	inline int getX() const { return mX; } // TODO: make function inline
 	inline int getY() const { return mY; }
 	inline float getCost() const { return mCost; }
-	
+    inline bool isEmpty() const { return mGameObjects.empty(); }
 	void addGameObject(GameObject* gameObject);
 	void removeGameObject(GameObject* gameObject);
 	inline GameObjects getGameObjects() { return mGameObjects; }

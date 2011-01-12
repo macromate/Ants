@@ -25,6 +25,18 @@ mId(sHighestId) {
   sHighestId++;
 }
 
+GameObject::GameObject(Node* node) :
+mCost(0.0),
+mNode(),
+mRadius(1),
+mObjectsInRadius(),
+mSprite(0),
+mId(sHighestId) {
+//	std::cout << "constructor gameobject" << std::endl;
+  sHighestId++;
+  setNode(node);
+}
+
 GameObject::~GameObject() {
 //	std::cout << "destructor gameobject" << std::endl;
 }

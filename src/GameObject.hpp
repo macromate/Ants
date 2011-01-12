@@ -12,6 +12,7 @@ class Node;
 class GameObject {
 public:
 	GameObject();
+    GameObject(Node*);
 	GameObject(const GameObject&);
 	virtual ~GameObject();
 	
