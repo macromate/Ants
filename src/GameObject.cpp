@@ -20,21 +20,23 @@ mNode(),
 mRadius(1),
 mObjectsInRadius(),
 mSprite(0),
-mId(sHighestId) {
+mId(sHighestId),
+mIsSelected(false) {
 //	std::cout << "constructor gameobject" << std::endl;
   sHighestId++;
 }
 
 GameObject::GameObject(Node* node) :
-mCost(0.0),
-mNode(),
-mRadius(1),
-mObjectsInRadius(),
-mSprite(0),
-mId(sHighestId) {
+    mCost(0.0),
+    mNode(),
+    mRadius(1),
+    mObjectsInRadius(),
+    mSprite(0),
+    mId(sHighestId), 
+    mIsSelected(false) {
 //	std::cout << "constructor gameobject" << std::endl;
-  sHighestId++;
-  setNode(node);
+        sHighestId++;
+        setNode(node);
 }
 
 GameObject::~GameObject() {

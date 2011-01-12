@@ -15,8 +15,7 @@ public:
     GameObject(Node*);
 	GameObject(const GameObject&);
 	virtual ~GameObject();
-	
-  inline int getId() const { return mId; }
+	inline int getId() const { return mId; }
 	
 	void setCost(float cost) { mCost = cost; }
 	inline float getCost() const { return mCost; }
@@ -30,6 +29,10 @@ public:
 	inline ants::Sprite* getSprite() const { return mSprite; }
 	inline bool hasSprite() const { return !!(mSprite); }
 	
+    inline bool isSelected() const { return mIsSelected; }
+    inline void setSelectionStatus(bool status) { mIsSelected = status; }
+    virtual inline sf::Color getSelectionColor() const { return sf::Color::Magenta; }
+	
 	// checks all event triggers
 	void trigger();
 	virtual void receiveEvent(Event*);
@@ -41,8 +44,9 @@ protected:
 	int mRadius;
 	GameObjects mObjectsInRadius;
 	ants::Sprite* mSprite;
-  int mId;
-  static int sHighestId;
+	int mId;
+    static int sHighestId;
+    bool mIsSelected;
 };
 
 #endif

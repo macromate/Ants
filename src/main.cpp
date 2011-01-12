@@ -71,6 +71,34 @@ int main (int argc, char * const argv[]) {
                 const sf::Input& Input = App.GetInput();
                 cout << "Mouse cursor position: " << Input.GetMouseX() 
                      <<  "/" << Input.GetMouseY() << endl;
+                sf::Vector2f mouse(Input.GetMouseX(), Input.GetMouseY());
+                bool shiftDown = Input.IsKeyDown(sf::Key::LShift) ||
+                                 Input.IsKeyDown(sf::Key::RShift);
+                
+                // cycle all gameobjects
+                // if position matches mouse input -> select
+                // if nothing matches -> deselect all
+                
+                GameObjects allObjects = objectManager->getObjects();
+                GameObjects::iterator i = allObjects.begin();
+                for (; i < allObjects.end(); i++) {
+                    GameObject* object = *i;
+                    sf::Vector2f left_upper = object->getSprite()->GetPosition();
+					sf::Vector2f right_lower = left_upper;
+					// TODO: clean up with new vector2f class
+                    left_upper.x -= 16;
+                    left_upper.y -= 16;
+					right_lower.x += PIXELS_PER_NODE/2;
+					right_lower.y += PIXELS_PER_NODE/2;
+					if (left_upper.x <= mouse.x && right_lower.x >= mouse.x &&
+					    left_upper.y <= mouse.y && right_lower.y >= mouse.y) {
+                        
+                        object->setSelectionStatus(true);
+                        
+					} else if (!shiftDown) {
+                        object->setSelectionStatus(false);
+					}
+                }
             }
         }
 		
@@ -99,6 +127,21 @@ int main (int argc, char * const argv[]) {
 			GameObject* object = *i;
 			if (object->hasSprite()) {
 				App.Draw(*object->getSprite());
+				if (object->isSelected()) {
+				    // draw rect
+                    sf::Vector2f position = object->getSprite()->GetPosition();
+					sf::Vector2f new_position = position;
+					// TODO: clean up with new vector2f class
+                    position.x -= 16;
+                    position.y -= 16;
+					new_position.x += PIXELS_PER_NODE/2;
+					new_position.y += PIXELS_PER_NODE/2;
+                    sf::Shape rect = sf::Shape::Rectangle(position, 
+                        new_position, object->getSelectionColor(), 
+                        true, object->getSelectionColor());
+                    rect.EnableFill(false);
+					App.Draw(rect);
+				}
 			}
 		}
 		
