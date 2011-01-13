@@ -68,7 +68,7 @@ void GameObject::receiveEvent(Event* event) {
     GameObjectArrivesInRadius* new_event = static_cast<GameObjectArrivesInRadius*>(event);
     sm->registerGameObject("objectInRadius", new_event->getObjectInRadius());
     sm->registerGameObject("self", new_event->getCenterObject());
-    sm->startScript("ant_arrives_in_radius");
+    sm->startScript("object_arrives_in_radius");
   } else if (event->getEventType() == ETYPE_LEAVES_RADIUS) {
 	  sm->startScript("ant_leaves_from_radius");
 	} else {

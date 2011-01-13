@@ -50,7 +50,7 @@ BOOST_PYTHON_MODULE(Ants) {
         .def("get_strain", &Ant::getStrain);
 
     class_<Spice, bases<GameObject> >("Spice", init<Node*>());
-    
+
     enum_<Strain>("Strain")
         .value("yellow", StrainYellow)
         .value("blue", StrainBlue)
@@ -60,43 +60,45 @@ BOOST_PYTHON_MODULE(Ants) {
 ScriptManager *ScriptManager::mInstance = 0;
 
 ScriptManager* ScriptManager::getInstance() {
-	if(!mInstance)
-		mInstance = new ScriptManager();
-	return mInstance;
+    if(!mInstance)
+        mInstance = new ScriptManager();
+    return mInstance;
 }
 
 
 ScriptManager::ScriptManager() {
-  Py_Initialize();
-  initAnts();
-  
-  // register node manager
-  object main_module(handle<>(borrowed(PyImport_AddModule("__main__"))));
-  object main_namespace = main_module.attr("__dict__");
-  main_namespace["nodeManager"] = ptr(NodeManager::getInstance());
+    Py_Initialize();
+    initAnts();
+    
+    // register mainNamespace
+    object main_module = import("__main__");
+    mMainNamespace = main_module.attr("__dict__");
+    // register nodeManager
+    mMainNamespace["nodeManager"] = ptr(NodeManager::getInstance());
 }
 
 ScriptManager::ScriptManager(const ScriptManager& ref) {
 }
 
 ScriptManager::~ScriptManager() {
-  Py_Finalize();
-	delete mInstance;
+    Py_Finalize();
+    delete mInstance;
 }
 
 void ScriptManager::startScript(string pName) {
-  try {
-    FILE* pyFile = fopen((PATH_TO_SCRIPTS + pName + ".py").c_str(), "r");
-    PyRun_SimpleFile(pyFile, pName.c_str());
+    try {
+        object main_module = import("__main__");
+        object main_namespace = main_module.attr("__dict__");
 
-  } catch (error_already_set) {
-    PyErr_Print();
-  }
+        pName = PATH_TO_SCRIPTS + pName + ".py";
+        exec_file(str(pName), main_namespace);
+
+    } catch (error_already_set) {
+        PyErr_Print();
+    }
 }
 
 // TODO: Unregister Gameobjects!!
 void ScriptManager::registerGameObject(std::string pName, GameObject* pObject) {
-  object main_module(handle<>(borrowed(PyImport_AddModule("__main__"))));
-  object main_namespace = main_module.attr("__dict__");
-  main_namespace[pName] = ptr(pObject);
+    mMainNamespace[pName] = ptr(pObject);
 }

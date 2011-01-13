@@ -18,7 +18,8 @@ public:
 private:
 	ScriptManager();
 	ScriptManager(const ScriptManager&);
-	static ScriptManager *mInstance;
+	static ScriptManager* mInstance;
+    boost::python::object mMainNamespace;
 };
 
 #endif
