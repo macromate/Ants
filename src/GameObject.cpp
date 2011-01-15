@@ -117,7 +117,7 @@ void GameObject::trigger() {
                 targets.push_back(this);
                 targets.push_back(*n);
                 GameObjectLeavesRadius* event = new GameObjectLeavesRadius(this, (*n));
-                // EventManager::getInstance()->fire(event);
+                EventManager::getInstance()->fire(event);
                 // und aus dem zwischenspeicher entfernen
                 mObjectsInRadius.erase(find(mObjectsInRadius.begin(), mObjectsInRadius.end(), *n));
             }

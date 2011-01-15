@@ -6,7 +6,7 @@
 #include "Event.hpp"
 #include "Pathfinder.hpp"
 #include <cstdlib> // for abs
-#include <cassert>
+#include <algorithm>
 
 using std::vector;
 using ants::Sprite;
@@ -181,6 +181,9 @@ void Ant::handleCurrentAction(float deltaTime) {
                 return;
 			}
             Spice* spice = static_cast<Spice*>(objects.at(0));
+            // object unbedingt aus dem cache entfernen
+            // sonst -> dangling pointer
+            mObjectsInRadius.erase(std::find(mObjectsInRadius.begin(), mObjectsInRadius.end(), spice));
             GameObjectManager::getInstance()->deleteSpice(spice);
             mStrength++;
             std::cout << "Gained one strength point" << std::endl;
