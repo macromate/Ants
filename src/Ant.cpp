@@ -176,7 +176,10 @@ void Ant::handleCurrentAction(float deltaTime) {
             // actually eat the spice at the target node
             // TODO: nur das futter entfernen
 			GameObjects objects = mEatTarget->getGameObjects();
-			assert(!objects.empty());
+			if (objects.empty()) { // vll ist das futter schon gefressen
+                mCurrentAction = Move;
+                return;
+			}
             Spice* spice = static_cast<Spice*>(objects.at(0));
             GameObjectManager::getInstance()->deleteSpice(spice);
             mStrength++;
