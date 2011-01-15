@@ -60,6 +60,7 @@ int main (int argc, char * const argv[]) {
     }
     
     sf::RenderWindow App(sf::VideoMode(640, 480), "Ants");
+    App.SetFramerateLimit(60);
     while (App.IsOpened())
     {
         sf::Event Event;
