@@ -8,7 +8,7 @@
 class Spice : public GameObject {
 public:
 	Spice(Node*);
-	~Spice();
+	virtual ~Spice();
 };
 
 #endif

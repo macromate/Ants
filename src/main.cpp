@@ -54,7 +54,7 @@ int main (int argc, char * const argv[]) {
         ants.push_back(ant);
     }
 
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 10; i++) {
         Spice *spice = new Spice(nodeManager->getEmptyRandomNode());
         objectManager->addSpice(spice);
     }

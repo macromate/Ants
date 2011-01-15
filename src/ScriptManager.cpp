@@ -21,11 +21,15 @@ BOOST_PYTHON_MODULE(Ants) {
         .def("get_x", &Coordinate::getX)
         .def("get_y", &Coordinate::getY);
 
+    class_<GameObjects>("GameObjects")
+        .def(vector_indexing_suite<GameObjects>());
+
     class_<GameObject>("GameObject", no_init)
         .def("get_radius", &GameObject::getRadius)
         .def("set_radius", &GameObject::setRadius)
         .def("get_id", &GameObject::getId)
-        .def("get_node", &GameObject::getNode, return_value_policy<reference_existing_object>());
+        .def("get_node", &GameObject::getNode, return_value_policy<reference_existing_object>())
+        .def("get_objects_in_radius", &GameObject::getObjectsInRadius);
 
     class_<Node, boost::noncopyable>("Node", no_init)
         .def("get_coordinate", &Node::getCoordinate, return_value_policy<return_by_value>())
@@ -47,7 +51,8 @@ BOOST_PYTHON_MODULE(Ants) {
 
     class_<Ant, bases<GameObject> >("Ant", no_init)
         .def("set_move_target", &Ant::setMoveTarget)
-        .def("get_strain", &Ant::getStrain);
+        .def("get_strain", &Ant::getStrain)
+        .def("eat", &Ant::eat);
 
     class_<Spice, bases<GameObject> >("Spice", init<Node*>());
 
@@ -55,6 +60,11 @@ BOOST_PYTHON_MODULE(Ants) {
         .value("yellow", StrainYellow)
         .value("blue", StrainBlue)
         .value("red", StrainRed);
+        
+    enum_<AntAction>("AntAction")
+        .value("Move", Move)
+        .value("Eat", Eat)
+        .value("Take", Take);
 }
 
 ScriptManager *ScriptManager::mInstance = 0;

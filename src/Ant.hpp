@@ -15,7 +15,8 @@ class Node;
 
 typedef enum {
   Move,
-  Eat
+  Eat,
+  Take
 } AntAction;
 
 class Ant : public GameObject {
@@ -38,18 +39,26 @@ public:
 	// inventory methods
 	void emptyInventory();
 	void setInventory(GameObject*);
-
+	
+    // inline void setCurrentAction(AntAction act) { mCurrentAction = act; }
+    void eat(Node*);
+    
 protected:
 	Strain mStrain;
 	GameObject* mInventory;
 	int mStrength;
 	AntAction mCurrentAction;
 	Node* mMoveTarget; // ein angrenzender node, das nächste ziel
-    sf::Vector2f mDirectionToMoveTarget;
-    float mTargetAngle; // winkel der ameise relativ zum ziel in grad
     Path mPath; // ein path, der nacheinander abgearbeitet wird
+    Node* mEatTarget;
+    // überprüft ob der sprite richtig zu einem node gedreht ist
+    bool doesFaceNode(Node*) const;
+    // dreht den sprite in richtung node
+    void rotateToFaceNode(Node* node, float deltaTime);
+    // gibt einen richtungsvektor zum node an
+    sf::Vector2f directionToNode(Node*) const;
 private:
-    int getAngleForDirectionVector(sf::Vector2f&) const; // in grad
+    int getAngleToNode(Node*) const; // in grad
 };
 
 #endif

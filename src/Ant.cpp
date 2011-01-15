@@ -2,6 +2,7 @@
 #include "NodeManager.hpp"
 #include "Node.hpp"
 #include "ScriptManager.hpp"
+#include "GameObjectManager.hpp"
 #include "Event.hpp"
 #include "Pathfinder.hpp"
 #include <cstdlib> // for abs
@@ -17,9 +18,8 @@ Ant::Ant(Strain strain, Node* node) :
     mInventory(),
     mStrength(1),
     mCurrentAction(Move),
-    mMoveTarget(),
-    mDirectionToMoveTarget(),
-    mTargetAngle()
+    mMoveTarget(0),
+    mEatTarget(0)
 {
     mSprite = new Sprite();
     mSprite->SetImage(*AssetManager::getInstance()->getImage("ant.png")); // todo: image gets probably copied here
@@ -53,6 +53,10 @@ void Ant::receiveEvent(Event* event) {
     // }
     } else if (event->getEventType() == ETYPE_INVENTORY_ADD) {
         sm->startScript("ant_sets_inventory");
+    } else if (event->getEventType() == ETYPE_ANT_MOVES) {
+        AntMoves* new_event = static_cast<AntMoves*>(event);
+        sm->registerGameObject("self", new_event->getAnt());
+        sm->startScript("ant_has_moved");
     } else {
         GameObject::receiveEvent(event);
     }
@@ -79,23 +83,13 @@ void Ant::handleCurrentAction(float deltaTime) {
     if (mCurrentAction == Move) {
         // wenn das ziel gesetzt ist, dann nur die sprite position updaten
         // wenn das ziel nicht gesetzt ist, dann python script aufrufen um ziel zu setzen
-		int spriteRot = static_cast<int>(mSprite->GetRotation());
-		int nextDirAngle = mTargetAngle + 45;
-		if (nextDirAngle > 360) {
-			nextDirAngle = 45;
-		}
-		float angle = mTargetAngle;
-		if (angle == 360) {
-			angle = 0;
-		}
-        if(mMoveTarget && ((spriteRot >= angle 
-						   && spriteRot < nextDirAngle)
-						   || (spriteRot == 180 && mTargetAngle == 0))) {
+        if(mMoveTarget && doesFaceNode(mMoveTarget)) {
             // ziel ist vorhanden
 			Vector2f oldPosition = mSprite->GetPosition();
             Vector2f newPosition;
-            newPosition.x = oldPosition.x + mDirectionToMoveTarget.x * deltaTime * 10;
-            newPosition.y = oldPosition.y + mDirectionToMoveTarget.y * deltaTime * 10;
+            Vector2f direction = directionToNode(mMoveTarget);
+            newPosition.x = oldPosition.x + direction.x * deltaTime * 10;
+            newPosition.y = oldPosition.y + direction.y * deltaTime * 10;
             mSprite->SetPosition(newPosition);
 
             // überprüfen ob am ziel angelangt
@@ -106,7 +100,7 @@ void Ant::handleCurrentAction(float deltaTime) {
             bool isAtTarget = false;
             
             // bewegungsrichtung kommt eine andere routine zum einsatz
-            switch(directionForVector(mDirectionToMoveTarget)) {
+            switch(directionForVector(directionToNode(mMoveTarget))) {
                 case North:
                     isAtTarget = newPosition.x == targetPosition.x &&
                         newPosition.y <= targetPosition.y;
@@ -143,11 +137,15 @@ void Ant::handleCurrentAction(float deltaTime) {
             if (isAtTarget) {
                 setNode(mMoveTarget);
                 mMoveTarget = 0;
+                
+                // event senden
+                AntMoves* event = new AntMoves(this);
+                EventManager::getInstance()->fire(event);
             }
             
-        } else if(mMoveTarget) {
+        } else if (mMoveTarget) {
             // ziel gefunden, muss aber noch richtig drehen
-            mSprite->Rotate(mTargetAngle * deltaTime);
+            rotateToFaceNode(mMoveTarget, deltaTime);
         } else {
             // ziel ist nicht vorhanden
             // entweder script aufrufen
@@ -162,10 +160,8 @@ void Ant::handleCurrentAction(float deltaTime) {
                 sm->registerGameObject("self", this);
                 sm->startScript("Move");
 
-                // überprüfen ob ziel gesetzt wurde
-                if(!mMoveTarget) {
-                    // TODO: throw severe error
-                }
+                // überprüfen ob ziel vom skript gesetzt wurde
+                assert(mMoveTarget);
             } else {
                 // ziel wird durch pfad bestimmt
                 Node* nextNode = mPath[0];
@@ -173,7 +169,23 @@ void Ant::handleCurrentAction(float deltaTime) {
                 setMoveTarget(nextNode);
             }
         }
-    }
+    } // if (mCurrentAction == Move)
+    else if (mCurrentAction == Eat) {
+        assert(mEatTarget);
+        if (doesFaceNode(mEatTarget)) {
+            // actually eat the spice at the target node
+            // TODO: nur das futter entfernen
+			GameObjects objects = mEatTarget->getGameObjects();
+			assert(!objects.empty());
+            Spice* spice = static_cast<Spice*>(objects.at(0));
+            GameObjectManager::getInstance()->deleteSpice(spice);
+            mStrength++;
+            std::cout << "Gained one strength point" << std::endl;
+            mCurrentAction = Move;
+        } else {
+            rotateToFaceNode(mEatTarget, deltaTime);
+        }
+    } // if (mCurrentAction == Eat)
 }
 
 void Ant::setNode(Node* node) {
@@ -182,7 +194,8 @@ void Ant::setNode(Node* node) {
     mSprite->SetY(node->getY());
 }
 
-int Ant::getAngleForDirectionVector(Vector2f &direction) const {
+int Ant::getAngleToNode(Node* node) const {
+    sf::Vector2f direction = directionToNode(node);
     switch(directionForVector(direction)) {
         case North: return 0;
         case South: return 180;
@@ -209,14 +222,6 @@ void Ant::setMoveTarget(Node* node) {
         // TODO: überprüfen ob ziel begehbar ist, das sollte eigentlich im skript passieren
         // hier wird dann eine exception geworfen (auf die das script reagieren kann??)
         mMoveTarget = node;
-        // ziel direction setzen
-        mDirectionToMoveTarget.x = (mMoveTarget->getX() - getNode()->getX()) / PIXELS_PER_NODE;
-        mDirectionToMoveTarget.y = (mMoveTarget->getY() - getNode()->getY()) / PIXELS_PER_NODE;
-        // relativer Winkel Ameise / Zielnode
-        mTargetAngle = getAngleForDirectionVector(mDirectionToMoveTarget);
-        if (mTargetAngle == 0) {
-            mTargetAngle = 360;
-        }
     } else {
         // pfad zu ziel berechnen
         Pathfinder finder(getNode(), node);
@@ -226,4 +231,41 @@ void Ant::setMoveTarget(Node* node) {
         mPath.erase(mPath.begin());
         setMoveTarget(firstNode);
     }
+}
+
+void Ant::eat(Node* node) {
+    // TODO: replace check with exception
+    assert(NodeManager::getInstance()->areNeighbours(getNode(), node));
+    // todo: assert that there is actually food on this node
+    mCurrentAction = Eat;
+    mEatTarget = node;
+}
+
+bool Ant::doesFaceNode(Node* node) const {
+    // relativer Winkel Ameise / node
+    float targetAngle = getAngleToNode(node);
+   	int spriteRot = static_cast<int>(mSprite->GetRotation());
+	int nextDirAngle = targetAngle + 45;
+	if (nextDirAngle > 360) {
+		nextDirAngle = 45;
+	}
+	float angle = targetAngle;
+	if (angle == 360) {
+		angle = 0;
+	}
+	return (spriteRot >= angle && spriteRot < nextDirAngle)
+            || (spriteRot == 180 && targetAngle == 0);
+}
+
+void Ant::rotateToFaceNode(Node* node, float deltaTime) {
+    float targetAngle = getAngleToNode(node);
+    mSprite->Rotate(targetAngle * deltaTime);
+}
+
+// TODO: eine referenz zurückgeben??
+sf::Vector2f Ant::directionToNode(Node* node) const {
+    sf::Vector2f direction;
+    direction.x = (node->getX() - getNode()->getX()) / PIXELS_PER_NODE;
+    direction.y = (node->getY() - getNode()->getY()) / PIXELS_PER_NODE;
+    return direction;
 }

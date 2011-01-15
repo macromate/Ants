@@ -6,6 +6,7 @@
 #include "GameObject.hpp"
 #include "Spice.hpp"
 #include <vector>
+#include <algorithm>
 
 class GameObjectManager {
 public:
@@ -13,6 +14,7 @@ public:
 	virtual ~GameObjectManager();
 	void add(GameObject*);
     void addSpice(Spice*);
+    void deleteSpice(Spice*);
 	void trigger();
 	inline GameObjects getObjects() const { return mObjects; }
     inline std::vector<Spice*> getSpice() const { return mSpice; }

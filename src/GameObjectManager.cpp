@@ -36,3 +36,9 @@ void GameObjectManager::trigger() {
 	for (; i < mObjects.end(); i++)
 		(*i)->trigger();
 }
+
+void GameObjectManager::deleteSpice(Spice* obj) {
+    mObjects.erase(std::find(mObjects.begin(), mObjects.end(), obj));
+    mSpice.erase(std::find(mSpice.begin(), mSpice.end(), obj));
+    delete obj;
+}

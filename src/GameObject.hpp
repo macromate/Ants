@@ -38,6 +38,8 @@ public:
 	virtual void receiveEvent(Event*);
 	virtual bool isAccessible() const;
 	
+    GameObjects getObjectsInRadius() const;
+	
 protected:
 	float mCost;
 	Node *mNode;

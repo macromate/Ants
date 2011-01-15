@@ -12,8 +12,8 @@
 class ScriptManager {
 public:
 	static ScriptManager *getInstance();
-	~ScriptManager();
-  void registerGameObject(std::string pName, GameObject* pObject);
+    ~ScriptManager();
+    void registerGameObject(std::string pName, GameObject* pObject);
 	void startScript(std::string pName);
 private:
 	ScriptManager();

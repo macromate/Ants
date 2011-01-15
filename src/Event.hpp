@@ -16,6 +16,7 @@ protected:
 };
 
 // #include "events/GameObjectArrivesInRadius.hpp"
+#include "events/AntMoves.hpp"
 
 
 #endif
